@@ -1,3 +1,5 @@
+#Copyright Scott Opell 2012
+#Licensed under the GPL license, see COPYING
 import urllib2
 import re
 import pprint
