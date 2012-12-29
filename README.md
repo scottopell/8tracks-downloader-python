@@ -26,6 +26,6 @@ usage is pretty basic, script is run from command line arguments
 
 ToDo
 ====
-* Convert to mp3 on the fly because nobody likes 
+* Convert to mp3 on the fly because nobody likes m4a
 * Create m3u playlist files of each
 * Add in Song Metadata

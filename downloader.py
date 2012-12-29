@@ -5,6 +5,7 @@ import re
 import pprint
 import argparse
 import os
+import sys
 try:
     import simplejson as json
 except ImportError:
@@ -24,6 +25,16 @@ parse.add_argument('-d', '--save_directory', required = False, default = "./", h
 args = parse.parse_args()
 
 api = args.API_key
+if len(api) != 40:
+	sys.exit("invalid api key")
+
+try:
+ 	urllib2.urlopen(args.playlist_url)
+except:
+	sys.exit("invalid URL")
+	raise
+
+
 #initialize api and get playtoken
 api_url = 'http://8tracks.com/sets/new.json?api_key='+api
 url = urllib2.urlopen(api_url)
@@ -35,7 +46,10 @@ playlist_url = args.playlist_url
 url = urllib2.urlopen(playlist_url)
 data = url.read()
 matches = re.search(r'mixes/(\d+)/player',data)  #seach through raw html for string mixes/#######/player, kind of messy, but best method currently
-playlist_id = matches.group(1) #this chooses the first match, its possible that 8tracks could change this later, but this works for now
+if matches.group(0) is not None:
+	playlist_id = matches.group(1) #this chooses the first match, its possible that 8tracks could change this later, but this works for now
+else:
+	sys.exit("invalid URL or 8tracks has updated to break compatibility, if the latter, contact me")
 #possible improvement to above, list all matches and take mode
 
 #get playlist "loader" basically the variable that will return song urls and will be iterated through
@@ -58,7 +72,13 @@ playlist_name = playlist_info['mix']['name']
 #get directory ready for some new tunes
 directory = os.path.join(args.save_directory,playlist_name)
 #os.makedirs(directory)
-ensure_dir(os.path.join(directory, "test.txt"))
+try:
+	ensure_dir(os.path.join(directory, "test.txt"))
+except:
+	print "invalid path given, saving to current directory instead"
+	directory = os.path.join(args.save_directory,playlist_name)
+	raise
+
 
 at_end = False
 song_number = 1
