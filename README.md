@@ -24,7 +24,7 @@ usage is pretty basic, script is run from command line arguments
                      to the same directory
 
 -mp3 ==> forces conversion of everything to mp3 even if its not already in mp3 format, requires faad.exe and lame.exe to be in the system path, these might be able to be found at rarewares.org
- usage `-mp3 True'
+ usage `-mp3 True`
 
 Notes
 =====

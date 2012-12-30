@@ -87,7 +87,7 @@ playurl = 'http://8tracks.com/sets/'+play_token+'/play?mix_id='+playlist_id+'&fo
 url = urllib2.urlopen(playurl)
 playlist_loader = json.load(url)
 
-pp.pprint(playlist_loader)
+#pp.pprint(playlist_loader)
 
 #get playlist info
 playlist = 'http://8tracks.com/mixes/'+playlist_id+'.json?api_key='+api
