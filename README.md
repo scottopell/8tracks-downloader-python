@@ -10,7 +10,7 @@ Usage
 =====
 usage is pretty basic, script is run from command line arguments
 
-    usage: downloader.py [-h] -u PLAYLIST_URL -a API_KEY [-d SAVE_DIRECTORY]
+    usage: downloader.py [-h] -u PLAYLIST_URL -a API_KEY [-d SAVE_DIRECTORY] [-mp3 MP3]
     
 
 -h        ==>           displays help file (above)
@@ -23,9 +23,19 @@ usage is pretty basic, script is run from command line arguments
                      argument, then file structure will be `c:/music/make some noise/(songs).m4a`  defaults
                      to the same directory
 
+-mp3 ==> forces conversion of everything to mp3 even if its not already in mp3 format, requires faad.exe and lame.exe to be in the system path, these might be able to be found at rarewares.org
+ usage `-mp3 True'
+
+Notes
+=====
+Even though its inconvenient it really is neccessary to get your own api key, otherwise 8tracks would shut this down very quickly
+
+Dev. Notes
+==========
+Previously 8tracks stored all songs as m4a files, now it seems the majority are stored in mp3 format, -mp3 option may not be needed, I have included it just in case
 
 ToDo
 ====
-* Convert to mp3 on the fly because nobody likes m4a
+~~* Convert to mp3 on the fly because nobody likes m4a~~
 * Create m3u playlist files of each
 * Add in Song Metadata
