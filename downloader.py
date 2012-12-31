@@ -113,17 +113,23 @@ except:
 
 at_end = False
 song_number = 1
+m3u = []
 while not at_end:
+    #song metadata/info
     curr_song_url = playlist_loader['set']['track']['track_file_stream_url']
     curr_artist = playlist_loader['set']['track']['performer']
     curr_song_title = playlist_loader['set']['track']['name']
     curr_year = playlist_loader['set']['track']['year']
     curr_album = playlist_loader['set']['track']['release_name']
+    #tracing through redirects
     actual_url = urllib2.urlopen(curr_song_url).geturl()
     parsed_url = urlparse(actual_url)
+    #gets the filetype designated by the server
     filetype = parsed_url.path[len(parsed_url.path)-4:len(parsed_url.path)]
+
     file_name = (str(song_number) + u' - ' + curr_artist + u'-' + curr_song_title + u' (' + str(curr_year) + u')' + filetype).encode('UTF-8')
     file_path = os.path.join(directory, unicode(file_name,errors='ignore'))
+    m3u.append(file_name)
     if bool(os.access(file_path, os.F_OK)):
         print "File number "+str(song_number)+" already exists!"
     else:
@@ -131,12 +137,13 @@ while not at_end:
         u = urllib2.urlopen(curr_song_url)
         f = open(file_path,'wb')
         f.write(u.read())
+        f.close
         if mp3 and not (filetype == ".mp3"):
             try:
                 to_mp3(file_path)
             finally:
                 print "an error has occured converting track number " + str(song_number) + "to mp3 format, tracks will be left in m4a format"
-    song_number +=1
+    song_number += 1
     #rerun this snippet from earlier to load information about next song
     playurl = 'http://8tracks.com/sets/'+play_token+'/next?mix_id='+playlist_id+'&format=jsonh&api_key=' + api
     url = urllib2.urlopen(playurl)
@@ -145,4 +152,8 @@ while not at_end:
     #check to see if its at the end of the playlist
     if playlist_loader['set']['at_end'] == True:
         at_end = True
+m3u_path = os.path.join(directory, playlist_name + ".m3u")
+m3u_file = open(m3u_path, 'w')
+m3u_file.write("\n".join(m3u))
+m3u_file.close
 print "Done, files can be found in "+directory
