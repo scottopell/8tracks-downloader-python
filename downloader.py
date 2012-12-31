@@ -8,6 +8,8 @@ import os
 import sys
 import subprocess
 from urlparse import urlparse
+from ID3 import *
+
 try:
     import simplejson as json
 except ImportError:
@@ -138,6 +140,14 @@ while not at_end:
         f = open(file_path,'wb')
         f.write(u.read())
         f.close
+        try:
+            id3info = ID3(file_path)
+            id3info['TITLE'] = curr_song_title.encode("ascii", "ignore").decode()
+            id3info['ARTIST'] = curr_artist.encode("ascii", "ignore").decode()
+            id3info['ALBUM'] = curr_album.encode("ascii", "ignore").decode()
+            id3info['YEAR'] = str(curr_year)
+        except InvalidTagError, message:
+            print "Invalid ID3 tag:", message
         if mp3 and not (filetype == ".mp3"):
             try:
                 to_mp3(file_path)

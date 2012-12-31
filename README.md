@@ -6,6 +6,8 @@ Downloads a given playlist from 8tracks to your computer
 Inspired and partially based on the php 8tracks downloader created by navinpai and mundofr
 https://github.com/mundofr/8Tracks-Downloader
 
+Thanks for the id3 song metadata tagging goes to http://id3-py.sourceforge.net/
+
 Usage
 =====
 usage is pretty basic, script is run from command line arguments
@@ -28,7 +30,7 @@ usage is pretty basic, script is run from command line arguments
 
 Notes
 =====
-Even though its inconvenient it really is neccessary to get your own api key, otherwise 8tracks would shut this down very quickly
+Even though its inconvenient it really is neccessary to get your own api key.
 
 Dev. Notes
 ==========
@@ -36,6 +38,6 @@ Previously 8tracks stored all songs as m4a files, now it seems the majority are 
 
 ToDo
 ====
-~~* Convert to mp3 on the fly because nobody likes m4a~~
-* Create m3u playlist files of each
-* Add in Song Metadata
+~~Convert to mp3 on the fly because nobody likes m4a~~
+~~Create m3u playlist files of each~~
+~~Add in Song Metadata~~
