@@ -36,12 +36,18 @@ def to_mp3(m4a_path):
     mp3_path = m4a_path[:-4] + ".mp3"
     subprocess.call(["faad", '-o', wav_path, m4a_path])
     subprocess.call(["lame", '-h', '-b', '128', wav_path, mp3_path])
-    os.remove(wav_path)
-    if f.open(mp3_path, "r") is not None:
-        os.remove(m4a_path)
+    try:
+        os.remove(wav_path)
+    except WindowsError:
+        print "windows error, error deleting wav"
+    if os.path.isfile(mp3_path):
+        try:
+            os.remove(m4a_path)
+        except WindowsError:
+            print "Windows cannot delete the original m4a file, feel free to delete it manually after conversion"
         return mp3_path
     else:
-        raise ConversionError(m4a_path, "mp3 file path is None for some reason")
+        raise ConversionError(m4a_path, "mp3 file path does not exist for some reason")
 
 pp = pprint.PrettyPrinter(indent=4)
 parse = argparse.ArgumentParser(description = "Get valid playlist url/id and api key")
@@ -129,17 +135,30 @@ while not at_end:
     #gets the filetype designated by the server
     filetype = parsed_url.path[len(parsed_url.path)-4:len(parsed_url.path)]
 
+    mp3_name = (str(song_number) + u' - ' + curr_artist + u'-' + curr_song_title + u' (' + str(curr_year) + u')' + ".mp3").encode('UTF-8')
     file_name = (str(song_number) + u' - ' + curr_artist + u'-' + curr_song_title + u' (' + str(curr_year) + u')' + filetype).encode('UTF-8')
     file_path = os.path.join(directory, unicode(file_name,errors='ignore'))
-    m3u.append(file_name)
-    if bool(os.access(file_path, os.F_OK)):
+    if bool(os.access(file_path, os.F_OK)):# and filetype == ".m4a" and mp3:
         print "File number "+str(song_number)+" already exists!"
+    elif os.path.isfile(os.path.join(directory, unicode(mp3_name, errors='ignore'))):
+        print "File number "+str(song_number)+" already exists in mp3 format!"
+        file_name = mp3_name
     else:
         print "Downloading " + file_name
         u = urllib2.urlopen(curr_song_url)
         f = open(file_path,'wb')
         f.write(u.read())
-        f.close
+        f.close()
+        if mp3 and not (filetype == ".mp3"):
+            try:
+                to_mp3(file_path)
+                file_name = mp3_name
+                file_path = os.path.join(directory, file_name)
+            except ConversionError:
+                print "an error has occured converting track number " + str(song_number) + " to mp3 format, track will be left in m4a format"
+        if file_name[len(file_name)-4:len(file_name)] == ".mp3":
+            #working here, this happens if the conversion was absolutely succesful, no access errors
+            print "great success"
         try:
             id3info = ID3(file_path)
             id3info['TITLE'] = curr_song_title.encode("ascii", "ignore").decode()
@@ -148,11 +167,7 @@ while not at_end:
             id3info['YEAR'] = str(curr_year)
         except InvalidTagError, message:
             print "Invalid ID3 tag:", message
-        if mp3 and not (filetype == ".mp3"):
-            try:
-                to_mp3(file_path)
-            finally:
-                print "an error has occured converting track number " + str(song_number) + "to mp3 format, tracks will be left in m4a format"
+    m3u.append(file_name)
     song_number += 1
     #rerun this snippet from earlier to load information about next song
     playurl = 'http://8tracks.com/sets/'+play_token+'/next?mix_id='+playlist_id+'&format=jsonh&api_key=' + api
@@ -165,5 +180,5 @@ while not at_end:
 m3u_path = os.path.join(directory, playlist_name + ".m3u")
 m3u_file = open(m3u_path, 'w')
 m3u_file.write("\n".join(m3u))
-m3u_file.close
+m3u_file.close()
 print "Done, files can be found in "+directory
