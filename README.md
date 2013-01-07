@@ -31,6 +31,11 @@ for id3 tagging, download this package and put ID3.py in the same directory you'
                      to the same directory
 
 -mp3 ==> forces conversion of everything to mp3 even if its not already in mp3 format, requires faad.exe and lame.exe to be in the system path, these might be able to be found at rarewares.org for windows, and should be available through your distro's repository system
+
+## Windows ##
+ http://www.rarewares.org/mp3-lame-bundle.php and http://www.rarewares.org/aac-decoders.php are both required, make sure the exe files end up in the Windows PATH or in the same directory as downloader.py
+## Linux  ##
+ Untested, but LAME and FAAD should both be able to be installed from your distros package management, ie `sudo apt-get install faad lame`
  usage `-mp3 True`
 
 Notes
@@ -41,7 +46,8 @@ Dev. Notes
 ==========
 Previously 8tracks stored all songs as m4a files, now it seems the majority are stored in mp3 format, maybe all of them, can't tell for sure -mp3 option may not be needed, I have included it just in case.
 
-Also untested with id3 tagging and m4a files, haven't encountered it yet
+UPDATE: m4a's do exist and this has been tested with them.
+
 
 ToDo
 ====
