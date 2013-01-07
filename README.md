@@ -30,13 +30,14 @@ for id3 tagging, download this package and put ID3.py in the same directory you'
                      argument, then file structure will be `c:/music/make some noise/(songs).m4a`  defaults
                      to the same directory
 
--mp3 ==> forces conversion of everything to mp3 even if its not already in mp3 format, requires faad.exe and lame.exe to be in the system path, these might be able to be found at rarewares.org for windows, and should be available through your distro's repository system
+-mp3 ==>  usage `-mp3 True` forces conversion of everything to mp3 even if its not already in mp3 format, **requires faad and lame**, see below for further instruction 
 
-## Windows ##
+### MP3 Support ###
+#### Windows ####
  http://www.rarewares.org/mp3-lame-bundle.php and http://www.rarewares.org/aac-decoders.php are both required, make sure the exe files end up in the Windows PATH or in the same directory as downloader.py
-## Linux  ##
+#### Linux  ####
  Untested, but LAME and FAAD should both be able to be installed from your distros package management, ie `sudo apt-get install faad lame`
- usage `-mp3 True`
+
 
 Notes
 =====
