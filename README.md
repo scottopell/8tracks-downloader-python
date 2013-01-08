@@ -38,6 +38,10 @@ for id3 tagging, download this package and put ID3.py in the same directory you'
 #### Linux  ####
  Untested, but LAME and FAAD should both be able to be installed from your distros package management, ie `sudo apt-get install faad lame`
 
+### ID3 Tagging ###
+download and set up id3-py, which can be found at its home here http://id3-py.sourceforge.net/
+its basic and a little old, but it works for our purposes
+If you're feeling especially lazy you don't even have to install it, you can just copy id3.py into the same directory as downloader.py and go to town
 
 Notes
 =====
