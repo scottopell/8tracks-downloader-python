@@ -30,6 +30,15 @@ def ensure_dir(f):  #stolen from http://stackoverflow.com/questions/273192/pytho
     if not os.path.exists(d):
         os.makedirs(d)
 
+def norm_year(y):
+    if y == '':
+        return 0
+    try:
+        int(y)
+        return y
+    except:
+        return 0
+
 #takes a path to an m4a and returns the path to an mp3, will attempt to delete the m4a on successful conversion
 def to_mp3(m4a_path):
     wav_path = m4a_path[:-4] + ".wav"
@@ -127,7 +136,7 @@ while not at_end:
     curr_song_url = playlist_loader['set']['track']['track_file_stream_url']
     curr_artist = playlist_loader['set']['track']['performer']
     curr_song_title = playlist_loader['set']['track']['name']
-    curr_year = playlist_loader['set']['track']['year']
+    curr_year = norm_year(playlist_loader['set']['track']['year'])
     curr_album = playlist_loader['set']['track']['release_name']
     #tracing through redirects
     actual_url = urllib2.urlopen(curr_song_url).geturl()
