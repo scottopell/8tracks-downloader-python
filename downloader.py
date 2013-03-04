@@ -5,6 +5,7 @@ import re
 import pprint
 import argparse
 import os
+import string
 import sys
 import subprocess
 from urlparse import urlparse
@@ -57,6 +58,8 @@ def to_mp3(m4a_path):
         return mp3_path
     else:
         raise ConversionError(m4a_path, "mp3 file path does not exist for some reason")
+
+valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
 
 pp = pprint.PrettyPrinter(indent=4)
 parse = argparse.ArgumentParser(description = "Get valid playlist url/id and api key")
@@ -146,6 +149,10 @@ while not at_end:
 
     mp3_name = (str(song_number) + u' - ' + curr_artist + u'-' + curr_song_title + u' (' + str(curr_year) + u')' + ".mp3").encode('UTF-8')
     file_name = (str(song_number) + u' - ' + curr_artist + u'-' + curr_song_title + u' (' + str(curr_year) + u')' + filetype).encode('UTF-8')
+    #sanitize mp3_name and file_name
+    file_name = ''.join(c for c in file_name if c in valid_chars)
+    mp3_name = ''.join(c for c in mp3_name if c in valid_chars)
+
     file_path = os.path.join(directory, unicode(file_name,errors='ignore'))
     if bool(os.access(file_path, os.F_OK)):# and filetype == ".m4a" and mp3:
         print "File number "+str(song_number)+" already exists!"
