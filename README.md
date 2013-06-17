@@ -13,7 +13,7 @@ usage is pretty basic, script is run from command line arguments
 
     usage: downloader.py [-h] -u PLAYLIST_URL -a API_KEY [-d SAVE_DIRECTORY] [-mp3 MP3]
 
-    `C:\Users\scott\Google Drive\projects\8tracks-downloader-python>downloader.py -u http://8tracks.com/dj-cass/new-year-party -a 7ad5c(censored)4eb83987e -d "c:\8tracks_downloads" -mp3 True`
+    `C:\Users\scott\Google Drive\projects\8tracks-downloader-python>downloader.py -u http://8tracks.com/dj-cass/new-year-party -a 7ad5c(censored)4eb83987e -d "c:\8tracks_downloads" -mp3`
 
 
 
@@ -30,7 +30,7 @@ for id3 tagging, download this package and put ID3.py in the same directory you'
                      argument, then file structure will be `c:/music/make some noise/(songs).m4a`  defaults
                      to the same directory
 
--mp3 ==>  usage `-mp3 True` forces conversion of everything to mp3 even if its not already in mp3 format, **requires faad and lame**, see below for further instruction 
+-mp3 ==>  usage `-mp3` forces conversion of everything to mp3 even if its not already in mp3 format, **requires faad and lame**, see below for further instruction 
 
 ### MP3 Support ###
 #### Windows ####
