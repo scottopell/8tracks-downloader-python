@@ -158,7 +158,12 @@ while not at_end:
         urllib2.urlopen(curr_song_url)
     except urllib2.HTTPError:
         pp.pprint(playlist_loader)
-        print "Song not found, playlist includes reference to deleted song"
+        print "Song "+ str(song_number) + " not found, playlist includes reference to deleted song"
+        song_number += 1
+        playlist_loader = iterate(playlist_loader)
+        if playlist_loader['set']['at_end'] == True:
+            at_end = True
+
         continue
     actual_url = urllib2.urlopen(curr_song_url).geturl()
     parsed_url = urlparse(actual_url)
@@ -193,7 +198,7 @@ while not at_end:
                 print "an error has occured converting track number " + str(song_number) + " to mp3 format, track will be left in m4a format"
         if file_name[len(file_name)-4:len(file_name)] == ".mp3":
             #working here, this happens if the conversion was absolutely succesful, no access errors
-            print "No error on track " + song_number
+            print "No error on track " + str(song_number)
         try:
             id3info = ID3(file_path)
             id3info['TITLE'] = curr_song_title.encode("ascii", "ignore").decode()
