@@ -130,9 +130,10 @@ playlist_info = json.load(url)
 
 #store playlist name from above
 playlist_name = playlist_info['mix']['name']
+playlist_slug = playlist_info['mix']['slug']
 
 #get directory ready for some new tunes
-directory = os.path.join(args.save_directory,playlist_name)
+directory = os.path.join(args.save_directory,playlist_slug)
 
 try:
     ensure_dir(os.path.join(directory, "test.txt"))
@@ -196,11 +197,9 @@ while not at_end:
                 file_path = os.path.join(directory, file_name)
             except ConversionError:
                 print "an error has occured converting track number " + str(song_number) + " to mp3 format, track will be left in m4a format"
-        if file_name[len(file_name)-4:len(file_name)] == ".mp3":
-            #working here, this happens if the conversion was absolutely succesful, no access errors
-            print "No error on track " + str(song_number)
         try:
             id3info = ID3(file_path)
+            #id3info['GENRE'] = ("Unknwn " + playlist_slug).encode("ascii", "ignore").decode()
             id3info['TITLE'] = curr_song_title.encode("ascii", "ignore").decode()
             id3info['ARTIST'] = curr_artist.encode("ascii", "ignore").decode()
             id3info['ALBUM'] = curr_album.encode("ascii", "ignore").decode()
