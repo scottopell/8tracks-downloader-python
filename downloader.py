@@ -131,6 +131,8 @@ playlist_info = json.load(url)
 #store playlist name from above
 playlist_name = playlist_info['mix']['name']
 playlist_slug = playlist_info['mix']['slug']
+playlist_name = ''.join(c for c in playlist_name if c in valid_chars)
+playlist_slug = ''.join(c for c in playlist_slug if c in valid_chars)
 
 #get directory ready for some new tunes
 directory = os.path.join(args.save_directory,playlist_slug)
