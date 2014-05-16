@@ -1,3 +1,4 @@
+#!/usr/bin/env/python
 #Copyright Scott Opell 2012
 #Licensed under the GPL license, see COPYING
 import urllib2
@@ -8,6 +9,7 @@ import os
 import string
 import sys
 import subprocess
+import time
 from urlparse import urlparse
 from ID3 import *
 
@@ -17,9 +19,9 @@ except ImportError:
     import json
 
 try:
-     WindowsError
+    WindowsError
 except NameError:
-     WindowsError = None
+    WindowsError = None
 
 class ConversionError(Exception):
     """Exception raised for error during conversion process
@@ -32,7 +34,7 @@ class ConversionError(Exception):
         self.msg = msg
 
 #stolen from http://stackoverflow.com/questions/273192/python-best-way-to-create-directory-if-it-doesnt-exist-for-file-write
-def ensure_dir(f):  
+def ensure_dir(f):
     d = os.path.dirname(f)
     if not os.path.exists(d):
         os.makedirs(d)
@@ -51,12 +53,12 @@ def to_mp3(m4a_path):
     wav_path = m4a_path[:-4] + ".wav"
     mp3_path = m4a_path[:-4] + ".mp3"
     try:
-      subprocess.call(["faad", '-q', '-o', wav_path, m4a_path])
-      subprocess.call(["lame", '-h', '-b', '128', wav_path, mp3_path])
+        subprocess.call(["faad", '-q', '-o', wav_path, m4a_path])
+        subprocess.call(["lame", '-h', '-b', '128', wav_path, mp3_path])
     except OSError:
-      print "no such file or directory when converting"
-      print m4a_path
-      print "this error usually occurs when you don't have lame or faad"
+        print "no such file or directory when converting"
+        print m4a_path
+        print "this error usually occurs when you don't have lame or faad"
     try:
         os.remove(wav_path)
     except WindowsError:
@@ -71,6 +73,10 @@ def to_mp3(m4a_path):
         raise ConversionError(m4a_path, "mp3 file path does not exist for some reason")
 playlist_loader = ""
 def iterate(playlist_loader):
+    print('sleeping for 240 seconds to simulate a listen')
+    time.sleep(240)
+    report_url = 'http://8tracks.com/sets/'+play_token+'/report?mix_id='+playlist_id+'track_id='+str(playlist_loader['set']['track']['id'])+'&format=jsonh&api_key='+api
+    urllib2.urlopen(report_url)
     playurl = 'http://8tracks.com/sets/'+play_token+'/next?mix_id='+playlist_id+'&format=jsonh&api_key=' + api
     url = urllib2.urlopen(playurl)
     playlist_loader = json.load(url)
@@ -81,10 +87,23 @@ valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
 
 pp = pprint.PrettyPrinter(indent=4)
 parse = argparse.ArgumentParser(description = "Get valid playlist url/id and api key")
-parse.add_argument('-u', '--playlist_url', required = True, help = "the URL of the playlist to be downloaded")
-parse.add_argument('-a', '--API_key', required = True, help = "the URL of the playlist to be downloaded")
-parse.add_argument('-d', '--save_directory', required = False, default = "./", help = "the directory where the files will be saved")
-parse.add_argument('-mp3', required = False, action = "store_true", help = "if this is present then files will be output in mp3 format")
+parse.add_argument( '-u',
+                    '--playlist_url',
+                    required = True,
+                    help = "the URL of the playlist to be downloaded")
+parse.add_argument( '-a',
+                    '--API_key',
+                    required = True,
+                    help = "the URL of the playlist to be downloaded")
+parse.add_argument( '-d',
+                    '--save_directory',
+                    required = False,
+                    default = "./",
+                    help = "the directory where the files will be saved")
+parse.add_argument( '-mp3',
+                    required = False,
+                    action = "store_true",
+                    help = "if this is present then files will be output in mp3 format")
 
 args = parse.parse_args()
 
@@ -98,8 +117,7 @@ try:
     urllib2.urlopen(args.playlist_url)
 except:
     sys.exit("invalid URL")
-    raise 
-
+    raise
 
 #initialize api and get playtoken
 api_url = 'http://8tracks.com/sets/new.json?api_key='+api
@@ -111,9 +129,13 @@ play_token = json_result[unicode('play_token')]
 playlist_url = args.playlist_url
 url = urllib2.urlopen(playlist_url)
 data = url.read()
-matches = re.search(r'mixes/(\d+)/player',data)  #seach through raw html for string mixes/#######/player, kind of messy, but best method currently
+# search through raw html for string mixes/#######/player
+# kind of messy, but best method currently
+matches = re.search(r'mixes/(\d+)/player',data)
 if matches.group(0) is not None:
-    playlist_id = matches.group(1) #this chooses the first match, its possible that 8tracks could change this later, but this works for now
+    #this chooses the first match,
+    #its possible that 8tracks could change this later, but this works for now
+    playlist_id = matches.group(1)
 else:
     sys.exit("invalid URL or 8tracks has updated to break compatibility, if the latter, contact me")
 
@@ -166,7 +188,6 @@ while not at_end:
         playlist_loader = iterate(playlist_loader)
         if playlist_loader['set']['at_end'] == True:
             at_end = True
-
         continue
     actual_url = urllib2.urlopen(curr_song_url).geturl()
     parsed_url = urlparse(actual_url)
