@@ -1,3 +1,16 @@
+Deprecation Notice
+==================
+
+__tldr__ watch https://github.com/scottopell/quadeight
+
+I will __not__ be updating this to be compatible with api version 3. See dev notes for more information regarding the switch.
+What this means is that at some point in the future, everything will break.
+
+I __will__ be maintaining _quadeight_, which is a ruby gem that aims to cover as much of the official 8tracks api as possible.
+The downloading functionality will either be built-in or will be easily reproducible with a small amount of custom code.
+
+__tldr__ watch https://github.com/scottopell/quadeight
+
 8tracks-downloader-python
 =========================
 
@@ -18,7 +31,7 @@ usage is pretty basic, script is run from command line arguments
 
 
 for id3 tagging, download this package and put ID3.py in the same directory you're running the script from, or set it up through python
-    
+
 
 -h        ==>           displays help file (above)
 
@@ -30,13 +43,14 @@ for id3 tagging, download this package and put ID3.py in the same directory you'
                      argument, then file structure will be `c:/music/make some noise/(songs).m4a`  defaults
                      to the same directory
 
--mp3 ==>  usage `-mp3` forces conversion of everything to mp3 even if its not already in mp3 format, **requires faad and lame**, see below for further instruction 
+-mp3 ==>  usage `-mp3` forces conversion of everything to mp3 even if its not already in mp3 format, **requires faad and lame**, see below for further instruction
 
 ### MP3 Support ###
 #### Windows ####
  http://www.rarewares.org/mp3-lame-bundle.php and http://www.rarewares.org/aac-decoders.php are both required, make sure the exe files end up in the Windows PATH or in the same directory as downloader.py
 #### Linux  ####
- Untested, but LAME and FAAD should both be able to be installed from your distros package management, ie `sudo apt-get install faad lame`
+ LAME and FAAD should both be able to be installed from your distros package management, ie `sudo apt-get install faad lame`
+ If they're not, just find some binaries compatible with your system and ensure that they end up in your PATH
 
 ### ID3 Tagging ###
 download and set up id3-py, which can be found at its home here http://id3-py.sourceforge.net/
@@ -52,6 +66,15 @@ Dev. Notes
 Previously 8tracks stored all songs as m4a files, now it seems the majority are stored in mp3 format, maybe all of them, can't tell for sure -mp3 option may not be needed, I have included it just in case.
 
 UPDATE: m4a's do exist and this has been tested with them.
+
+The methods used by this utility are subject to easily breaking.
+Specifically the method for getting the mix_id. Especially without tests, I'll have no way of knowing until somebody says it doesn't work.
+
+
+API version 3 is out, but its not the default currently.
+Eventually api version 3 will become the default and version 2 will no longer be available.
+When this happens there will need to be significant rewrites to maintain the current functionality.
+
 
 
 ToDo
