@@ -94,7 +94,7 @@ parse.add_argument( '-u',
 parse.add_argument( '-a',
                     '--API_key',
                     required = True,
-                    help = "the URL of the playlist to be downloaded")
+                    help = "the developer's API key")
 parse.add_argument( '-d',
                     '--save_directory',
                     required = False,
